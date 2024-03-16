@@ -62,12 +62,48 @@ namespace OrderBot
                 
                 case State.MEAL:
 
+                    if (stateInitMessage)
+                    {
+                        aMessages.Add("Awesome, I can absolutely help you with meal recommendations.");
+                        aMessages.Add("What's your target calorie intake?");
+                        stateInitMessage = false;
+                    }
+                    else
+                    {
+                        aMessages.Add(response);
+                    }
+
+
+
                     break;
                 
                 case State.CALORIE:
+
+                    if (stateInitMessage)
+                    {
+                        aMessages.Add("Perfect choice, tracking calories is important in your fitness journey.");
+                        aMessages.Add("How much calories have you consumed?");
+                        stateInitMessage = false;
+                    }
+                    else
+                    {
+                        aMessages.Add(response);
+                    }
+
                     break;
 
                 case State.BMI:
+                    if (stateInitMessage)
+                    {
+                        aMessages.Add("Great! You wanna know your BMI!");
+                        aMessages.Add("Please input your height(cm) and weight(kg) in H-W format. Example, 161-55 means 161 cm and 55 kg.");
+                        stateInitMessage = false;
+                    }
+                    else
+                    {
+                        aMessages.Add(response);
+                    }
+
                     break;
 
                 case State.CONTINUE:
@@ -137,8 +173,29 @@ namespace OrderBot
 
                    
                     break;
+                
+                case State.MEAL:
+                    
+                    response = "Based on my analysis, your meals should be the following: \n Breakfast: temp breakfast.\n Lunch: temp lunch. \n Dinner: temp dinner"; //temp
+                    this.nCur = State.CONTINUE;
+                    stateInitMessage = true;
+                    break;
 
+                case State.CALORIE:
+                    response = $"Success! Your calorie intake of {sInMessage} has been recorded."; //temp
+                    this.nCur = State.CONTINUE;
+                    stateInitMessage = true;
+                    break;
 
+                case State.BMI:
+                    string[] heightWeight = sInMessage.Split('-');
+                    double BMI = Convert.ToDouble(heightWeight[1]) / Math.Pow((Convert.ToDouble(heightWeight[0])/100),2);
+                    response = $"Awesome! Your BMI is {Math.Round(BMI,2)}. "; //temp
+                    this.nCur = State.CONTINUE;
+                    stateInitMessage = true;
+                    break;
+
+                    
                 case State.EXERCISE:
                    switch(sInMessage)
                     {
@@ -176,12 +233,9 @@ namespace OrderBot
                             response = "Incorrect response. Please try again.";
                             break;
                     }
-
-
-                   
                     break;
 
-                  case State.CONTINUE:
+                case State.CONTINUE:
                         switch(sInMessage)
                         {
                             case "1":
@@ -205,7 +259,6 @@ namespace OrderBot
                                 break;
                             default:
                                 response = "Incorrect response. Please try again.";
-
                                 break;
 
                         }
